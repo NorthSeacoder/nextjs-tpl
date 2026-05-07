@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__context7__query-docs",
+      "WebSearch",
+      "Bash(npm view *)",
+      "Bash(pnpm install *)",
+      "Bash(pnpm init *)",
+      "Bash(pnpm build *)",
+      "mcp__context7__resolve-library-id",
+      "Bash(pnpm typecheck *)",
+      "Bash(pnpm add *)",
+      "Bash(pnpm test *)",
+      "Bash(pnpm lint *)",
+      "Bash(pnpm --filter @nextjs-tpl/web lint)",
+      "Bash(npx next *)",
+      "Bash(pnpm --filter @nextjs-tpl/web exec next lint)",
+      "Bash(./node_modules/.bin/next lint *)",
+      "Bash(./node_modules/.bin/next --help)",
+      "Bash(python3 -c ' *)",
+      "Bash(mv /tmp/db-pkg.json packages/db/package.json)",
+      "Bash(python3 *)"
+    ]
+  }
+}

@@ -1,0 +1,20 @@
+services:
+  web:
+    image: ${DOCKER_REGISTRY:-ghcr.io/your-org}/${DOCKER_IMAGE_NAME:-nextjs-tpl}:latest
+    restart: unless-stopped
+    expose:
+      - "3000"
+    env_file:
+      - .env
+    networks:
+      - proxy
+      - default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextjs-tpl.rule=Host(`${HOST:-nextjs-tpl.local}`)"
+      - "traefik.http.routers.nextjs-tpl.entrypoints=web"
+      - "traefik.http.services.nextjs-tpl.loadbalancer.server.port=3000"
+
+networks:
+  proxy:
+    external: true
