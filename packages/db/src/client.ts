@@ -46,11 +46,14 @@ function getDb(): DbInstance {
   return _db;
 }
 
-export const db = new Proxy({} as DbInstance, {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const db: any = new Proxy({} as DbInstance, {
   get(_, prop) {
-    return Reflect.get(getDb(), prop);
+    const proxyTarget = getDb();
+    return Reflect.get(proxyTarget, prop);
   },
 }) as any;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Database = any;
 export type { schema };

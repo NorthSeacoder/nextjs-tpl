@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { spawnSync } from 'node:child_process';
 import { Client } from 'pg';
 import { env, workspaceRoot } from '../src/env';
 
@@ -13,7 +14,6 @@ type JournalFile = {
 };
 
 function runSqliteMigrate() {
-  const { spawnSync } = require('child_process') as typeof import('child_process');
   const result = spawnSync(
     'drizzle-kit',
     ['migrate', '--config', path.join(process.cwd(), 'drizzle.sqlite.config.ts')],

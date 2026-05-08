@@ -1,7 +1,10 @@
 import 'dotenv/config';
+import type { BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
+import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { db } from './client';
 import { env } from './env';
-import { users } from './schema';
+import * as postgresSchema from './schema/postgres';
+import * as sqliteSchema from './schema/sqlite';
 import { eq } from 'drizzle-orm';
 import { hashPassword } from './utils/password';
 
@@ -11,24 +14,49 @@ async function seed() {
     : env.databaseUrl;
   console.log(`Seeding ${env.databaseDriver}: ${location}`);
 
-  const existingAdmin = await db
-    .select({ id: users.id })
-    .from(users)
-    .where(eq(users.email, env.adminEmail))
-    .limit(1);
+  if (env.databaseDriver === 'sqlite') {
+    const sqliteDb = db as BetterSQLite3Database<typeof sqliteSchema>;
 
-  if (existingAdmin.length > 0) {
-    console.log('Admin user already exists, skipping seed.');
-    return;
+    const existingAdmin = await sqliteDb
+      .select({ id: sqliteSchema.users.id })
+      .from(sqliteSchema.users)
+      .where(eq(sqliteSchema.users.email, env.adminEmail))
+      .limit(1);
+
+    if (existingAdmin.length > 0) {
+      console.log('Admin user already exists, skipping seed.');
+      return;
+    }
+
+    const passwordHash = await hashPassword(env.adminPassword);
+
+    await sqliteDb.insert(sqliteSchema.users).values({
+      email: env.adminEmail,
+      name: 'Admin',
+      passwordHash,
+    });
+  } else {
+    const postgresDb = db as NodePgDatabase<typeof postgresSchema>;
+
+    const existingAdmin = await postgresDb
+      .select({ id: postgresSchema.users.id })
+      .from(postgresSchema.users)
+      .where(eq(postgresSchema.users.email, env.adminEmail))
+      .limit(1);
+
+    if (existingAdmin.length > 0) {
+      console.log('Admin user already exists, skipping seed.');
+      return;
+    }
+
+    const passwordHash = await hashPassword(env.adminPassword);
+
+    await postgresDb.insert(postgresSchema.users).values({
+      email: env.adminEmail,
+      name: 'Admin',
+      passwordHash,
+    });
   }
-
-  const passwordHash = await hashPassword(env.adminPassword);
-
-  await db.insert(users).values({
-    email: env.adminEmail,
-    name: 'Admin',
-    passwordHash,
-  });
 
   console.log(`Admin user created: ${env.adminEmail}`);
 }
