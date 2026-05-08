@@ -19,7 +19,9 @@
       "Bash(./node_modules/.bin/next --help)",
       "Bash(python3 -c ' *)",
       "Bash(mv /tmp/db-pkg.json packages/db/package.json)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "mcp__exa__web_search_exa",
+      "mcp__exa__web_fetch_exa"
     ]
   }
 }

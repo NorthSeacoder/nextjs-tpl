@@ -1,27 +1,27 @@
 export default function HomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-24">
-      <div className="max-w-lg text-center space-y-6">
-        <h1 className="text-4xl font-bold">Next.js Template</h1>
-        <p className="text-lg text-gray-600">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-[var(--bg-canvas)] px-6 py-24 text-[var(--text-primary)]">
+      <div className="max-w-lg space-y-6 text-center">
+        <h1 className="text-4xl font-bold text-[var(--text-primary)]">Next.js Template</h1>
+        <p className="text-lg text-[var(--text-secondary)]">
           A self-hosted, agent-friendly full-stack template for building
           single-user web applications with API access.
         </p>
-        <div className="flex gap-4 justify-center">
+        <div className="flex flex-col gap-3 justify-center sm:flex-row sm:gap-4">
           <a
             href="/dashboard"
-            className="rounded-md bg-blue-600 px-6 py-2.5 text-sm font-medium text-white hover:bg-blue-700"
+            className="rounded-md border border-[var(--border-strong)] bg-[var(--bg-panel-strong)] px-6 py-2.5 text-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-panel-contrast)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)]"
           >
             Dashboard
           </a>
           <a
             href="/api/health"
-            className="rounded-md border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="rounded-md border border-[var(--border-subtle)] bg-[var(--bg-elevated)] px-6 py-2.5 text-sm font-medium text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-panel)] hover:text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)]"
           >
             Health Check
           </a>
         </div>
-        <div className="pt-8 text-sm text-gray-400 space-y-1">
+        <div className="pt-8 text-sm text-[var(--text-secondary)] space-y-1">
           <p>Shared PostgreSQL + Schema Isolation</p>
           <p>Session Auth + Personal Access Tokens</p>
           <p>OpenAPI v1 Contract</p>

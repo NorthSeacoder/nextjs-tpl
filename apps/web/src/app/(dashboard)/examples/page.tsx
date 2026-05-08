@@ -90,34 +90,36 @@ export default function ExamplesPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Examples</h1>
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h1 className="text-2xl font-bold text-[var(--text-primary)]">Examples</h1>
         <button
           onClick={() => { resetForm(); setShowForm(true); }}
-          className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+          className="min-h-11 rounded-md border border-[var(--border-strong)] bg-[var(--bg-panel-strong)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-panel-contrast)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] sm:min-h-0"
         >
           Add Item
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="mb-6 rounded-lg border bg-white p-4 space-y-3">
+        <form onSubmit={handleSubmit} className="mb-6 space-y-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-panel)] p-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Title</label>
+            <label htmlFor="example-title" className="mb-1 block text-sm font-medium text-[var(--text-primary)]">Title</label>
             <input
               type="text"
               value={formTitle}
               onChange={(e) => setFormTitle(e.target.value)}
               required
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              id="example-title"
+              className="w-full rounded-md border border-[var(--border-subtle)] bg-[var(--bg-canvas)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)]"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Status</label>
+            <label htmlFor="example-status" className="mb-1 block text-sm font-medium text-[var(--text-primary)]">Status</label>
             <select
+              id="example-status"
               value={formStatus}
               onChange={(e) => setFormStatus(e.target.value)}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-[var(--border-subtle)] bg-[var(--bg-canvas)] px-3 py-2 text-sm text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)]"
             >
               <option value="active">Active</option>
               <option value="archived">Archived</option>
@@ -125,19 +127,27 @@ export default function ExamplesPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Notes</label>
+            <label htmlFor="example-notes" className="mb-1 block text-sm font-medium text-[var(--text-primary)]">Notes</label>
             <textarea
+              id="example-notes"
               value={formNotes}
               onChange={(e) => setFormNotes(e.target.value)}
               rows={3}
-              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-[var(--border-subtle)] bg-[var(--bg-canvas)] px-3 py-2 text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)]"
             />
           </div>
-          <div className="flex gap-2">
-            <button type="submit" className="rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <button
+              type="submit"
+              className="min-h-11 rounded-md border border-[var(--border-strong)] bg-[var(--bg-panel-strong)] px-4 py-2 text-sm font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--bg-panel-contrast)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] sm:min-h-0"
+            >
               {editingId ? 'Update' : 'Create'}
             </button>
-            <button type="button" onClick={resetForm} className="rounded-md border px-4 py-2 text-sm text-gray-600 hover:bg-gray-50">
+            <button
+              type="button"
+              onClick={resetForm}
+              className="min-h-11 rounded-md border border-[var(--border-subtle)] bg-[var(--bg-panel)] px-4 py-2 text-sm text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-elevated)] hover:text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] sm:min-h-0"
+            >
               Cancel
             </button>
           </div>
@@ -149,23 +159,33 @@ export default function ExamplesPage() {
       ) : (
         <div className="space-y-2">
           {items.map((item) => (
-            <div key={item.id} className="flex items-center justify-between rounded-lg border bg-white p-4">
-              <div>
-                <p className="font-medium">{item.title}</p>
-                <p className="text-sm text-gray-500">
+            <div key={item.id} className="flex flex-col gap-3 rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-panel)] p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.02)] sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
+                <p className="break-words font-medium text-[var(--text-primary)]">{item.title}</p>
+                <p className="mt-1 text-sm text-[var(--text-secondary)]">
                   <span className={`inline-block rounded px-1.5 py-0.5 text-xs font-medium ${
-                    item.status === 'active' ? 'bg-green-100 text-green-700' :
-                    item.status === 'archived' ? 'bg-gray-100 text-gray-700' :
-                    'bg-yellow-100 text-yellow-700'
+                    item.status === 'active' ? 'bg-[var(--success-bg)] text-[var(--success-text)]' :
+                    item.status === 'archived' ? 'bg-[var(--bg-elevated)] text-[var(--text-secondary)]' :
+                    'bg-[var(--warning-bg)] text-[var(--warning-text)]'
                   }`}>
                     {item.status}
                   </span>
-                  {item.notes && <span className="ml-2">{item.notes}</span>}
+                  {item.notes && <span className="ml-2 break-words">{item.notes}</span>}
                 </p>
               </div>
-              <div className="flex gap-2">
-                <button onClick={() => startEdit(item)} className="text-sm text-blue-600 hover:underline">Edit</button>
-                <button onClick={() => handleDelete(item.id)} className="text-sm text-red-600 hover:underline">Delete</button>
+              <div className="flex shrink-0 gap-3">
+                <button
+                  onClick={() => startEdit(item)}
+                  className="min-h-11 rounded px-1 text-sm text-[var(--text-primary)] transition-colors hover:text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] sm:min-h-0"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(item.id)}
+                  className="min-h-11 rounded px-1 text-sm text-[var(--danger-text)] transition-colors hover:text-[var(--danger-text-strong)] focus:outline-none focus:ring-2 focus:ring-[var(--focus-ring)] sm:min-h-0"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}
