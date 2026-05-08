@@ -10,6 +10,13 @@
 - self-host first：保持项目可在单机 / NAS 自主部署
 - 项目只携带自身业务容器，不重复声明公共基础设施
 
+本模板现在区分两条路径：
+
+- 本地默认开发：SQLite-first
+- NAS/服务器部署：PostgreSQL-first
+
+本文仅覆盖部署路径，不是本地首次启动指南。
+
 ## Shared Infrastructure
 
 当前 NAS 上可复用的公共基础设施：
@@ -59,9 +66,12 @@
 5. 在项目 `.env` 中写入连接信息和 schema 名
 6. 用项目自己的 migration 初始化 schema
 
+推荐从 `.env.postgres.example` 开始，而不是 `.env.example`。
+
 推荐环境变量：
 
 ```text
+DATABASE_DRIVER=postgres
 DB_HOST=shared-postgres
 DB_PORT=5432
 DB_NAME=<shared_db_name>
@@ -94,6 +104,7 @@ web
 约束：
 
 - `web` 加入外部 `proxy` network
+- `DATABASE_DRIVER=postgres`
 - 通过 `DATABASE_URL` 连接公共 `shared-postgres`
 - 通过 `DATABASE_SCHEMA` 指定当前项目 schema
 - 通过 Traefik labels 挂域名

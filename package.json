@@ -10,6 +10,7 @@
     "db:generate": "turbo run db:generate",
     "db:migrate": "turbo run db:migrate",
     "db:seed": "turbo run db:seed",
+    "db:setup": "turbo run db:setup",
     "db:studio": "turbo run db:studio"
   },
   "devDependencies": {

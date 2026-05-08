@@ -12,20 +12,23 @@
   "scripts": {
     "build": "tsc --noEmit",
     "typecheck": "tsc --noEmit",
-    "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
-    "db:seed": "tsx src/seed.ts",
-    "db:studio": "drizzle-kit studio",
+    "db:generate": "node --import tsx scripts/drizzle.ts generate",
+    "db:migrate": "node --import tsx scripts/migrate.ts",
+    "db:seed": "node --import tsx src/seed.ts",
+    "db:setup": "node --import tsx scripts/prepare-sqlite.ts && pnpm db:migrate && pnpm db:seed",
+    "db:studio": "node --import tsx scripts/drizzle.ts studio",
     "lint": "eslint ."
   },
   "dependencies": {
     "bcrypt": "^6",
+    "better-sqlite3": "^11.10.0",
     "drizzle-orm": "^0.45",
     "pg": "^8"
   },
   "devDependencies": {
     "@nextjs-tpl/config": "workspace:*",
     "@types/bcrypt": "^5",
+    "@types/better-sqlite3": "^7.6.12",
     "@types/pg": "^8",
     "dotenv": "^16",
     "drizzle-kit": "^0.31",

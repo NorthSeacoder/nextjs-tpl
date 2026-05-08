@@ -17,6 +17,7 @@ dist/
 .env
 .env.local
 .env.*.local
+!.env.postgres.example
 
 # IDE
 .idea/
@@ -42,6 +43,7 @@ coverage/
 drizzle/meta/
 !drizzle/meta/0000_snapshot.json
 !drizzle/meta/_journal.json
+packages/db/data/
 
 # Vercel
 .vercel

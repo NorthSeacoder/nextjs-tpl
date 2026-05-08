@@ -1,27 +1,46 @@
-import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
+import fs from 'fs';
+import path from 'path';
+import BetterSqlite3 from 'better-sqlite3';
+import { drizzle as drizzleSqlite, type BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
+import { drizzle as drizzlePg, type NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Pool } from 'pg';
+import { env, resolveSqliteDatabasePath } from './env';
 import * as schema from './schema';
-import { env } from './env';
+import { postgresSchema, sqliteSchema } from './schema';
 
-type DbInstance = NodePgDatabase<typeof schema>;
+type PostgresDbInstance = NodePgDatabase<typeof postgresSchema>;
+type SqliteDbInstance = BetterSQLite3Database<typeof sqliteSchema>;
+type DbInstance = PostgresDbInstance | SqliteDbInstance;
 
 let _db: DbInstance | null = null;
 
 function getDb(): DbInstance {
-  if (!env.isConfigured) {
-    throw new Error('Database is not configured. Set DATABASE_URL, DATABASE_SCHEMA, and SESSION_SECRET.');
+  if (!env.isDatabaseConfigured) {
+    throw new Error('Database is not configured. Set DATABASE_DRIVER and DATABASE_URL. For postgres also set DATABASE_SCHEMA.');
   }
 
   if (!_db) {
-    const pool = new Pool({
-      connectionString: env.databaseUrl,
-      options: `-c search_path=${env.databaseSchema}`,
-    });
+    if (env.databaseDriver === 'sqlite') {
+      const absolutePath = resolveSqliteDatabasePath(env.databaseUrl);
+      fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+      const client = new BetterSqlite3(absolutePath);
+      client.pragma('journal_mode = WAL');
 
-    _db = drizzle(pool, {
-      schema,
-      casing: 'snake_case',
-    });
+      _db = drizzleSqlite(client, {
+        schema: sqliteSchema,
+        casing: 'snake_case',
+      });
+    } else {
+      const pool = new Pool({
+        connectionString: env.databaseUrl,
+        options: `--search_path=${env.databaseSchema}`,
+      });
+
+      _db = drizzlePg(pool, {
+        schema: postgresSchema,
+        casing: 'snake_case',
+      });
+    }
   }
 
   return _db;
@@ -31,7 +50,7 @@ export const db = new Proxy({} as DbInstance, {
   get(_, prop) {
     return Reflect.get(getDb(), prop);
   },
-});
+}) as any;
 
-export type Database = DbInstance;
+export type Database = any;
 export type { schema };

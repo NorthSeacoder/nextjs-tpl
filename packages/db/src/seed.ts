@@ -6,7 +6,10 @@ import { eq } from 'drizzle-orm';
 import { hashPassword } from './utils/password';
 
 async function seed() {
-  console.log(`Seeding schema: ${env.databaseSchema}`);
+  const location = env.databaseDriver === 'postgres'
+    ? `schema ${env.databaseSchema}`
+    : env.databaseUrl;
+  console.log(`Seeding ${env.databaseDriver}: ${location}`);
 
   const existingAdmin = await db
     .select({ id: users.id })

@@ -14,15 +14,13 @@ pnpm install
 
 ```bash
 cp .env.example .env
-# Edit .env with your database URL, schema, session secret, etc.
+# `.env.example` defaults to local SQLite.
 ```
 
 ### 3. Set up database
 
 ```bash
-pnpm db:generate    # Generate migration files
-pnpm db:migrate     # Run migrations
-pnpm db:seed        # Seed admin user
+pnpm db:setup       # Create/open SQLite DB, run migrations, seed admin user
 ```
 
 ### 4. Start development
@@ -33,6 +31,19 @@ pnpm dev            # Start all packages in dev mode
 
 Visit http://localhost:3000. Log in with the admin credentials from `.env`.
 
+Default local mode:
+
+- `DATABASE_DRIVER=sqlite`
+- `DATABASE_URL=file:./packages/db/data/dev.sqlite`
+- no local PostgreSQL required
+
+To switch to PostgreSQL, copy `.env.postgres.example` into `.env`, fill the connection settings, then run:
+
+```bash
+pnpm db:migrate
+pnpm db:seed
+```
+
 ## Commands
 
 | Command | Description |
@@ -42,10 +53,13 @@ Visit http://localhost:3000. Log in with the admin credentials from `.env`.
 | `pnpm lint` | Lint all packages |
 | `pnpm typecheck` | Type-check all packages |
 | `pnpm test` | Run tests |
-| `pnpm db:generate` | Generate DB migrations |
-| `pnpm db:migrate` | Apply DB migrations |
-| `pnpm db:seed` | Seed admin user |
+| `pnpm db:generate` | Generate migrations for current DB driver |
+| `pnpm db:migrate` | Apply migrations for current DB driver |
+| `pnpm db:seed` | Seed admin user for current DB driver |
+| `pnpm db:setup` | Run migrate + seed for current DB driver |
 | `pnpm db:studio` | Open Drizzle Studio |
+
+See [docs/database.md](docs/database.md) for SQLite vs PostgreSQL modes.
 
 ## Docker
 
@@ -55,12 +69,14 @@ Visit http://localhost:3000. Log in with the admin credentials from `.env`.
 docker compose -f compose.dev.yml up --build
 ```
 
+This is an optional containerized path. The default local development path is SQLite-first and does not require Docker or PostgreSQL.
+
 ### NAS production deployment
 
 Requires a running Traefik reverse proxy on an external `proxy` network and a shared PostgreSQL instance.
 
 ```bash
-# Configure .env with shared PostgreSQL connection info
+# Start from `.env.postgres.example`, then configure shared PostgreSQL connection info
 docker compose -f compose.prod.yml up -d
 ```
 
@@ -91,8 +107,9 @@ packages/ui       Shared UI components
 
 See `.env.example` for all required and optional variables. Key ones:
 
-- `DATABASE_URL` — PostgreSQL connection string
-- `DATABASE_SCHEMA` — Project schema for isolation
+- `DATABASE_DRIVER` — `sqlite` for local default, `postgres` for deployment
+- `DATABASE_URL` — SQLite file URL or PostgreSQL connection string
+- `DATABASE_SCHEMA` — PostgreSQL schema for isolation; ignored in SQLite mode
 - `SESSION_SECRET` — Session cookie signing key
 - `ADMIN_EMAIL` / `ADMIN_PASSWORD` — Initial admin user (used by seed)
 - `NEXT_PUBLIC_APP_URL` — Public URL of the application

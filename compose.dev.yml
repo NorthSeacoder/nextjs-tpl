@@ -1,4 +1,6 @@
 services:
+  # Optional local container path for Postgres validation.
+  # SQLite-first local development should use `.env.example` + `pnpm db:setup` + `pnpm dev`.
   web:
     build:
       context: .
