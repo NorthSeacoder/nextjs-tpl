@@ -7,6 +7,7 @@
     "lint": "turbo run lint",
     "typecheck": "turbo run typecheck",
     "test": "vitest run",
+    "release": "bumpp --tag --commit --push",
     "db:generate": "turbo run db:generate",
     "db:migrate": "turbo run db:migrate",
     "db:seed": "turbo run db:seed",
@@ -14,6 +15,7 @@
     "db:studio": "turbo run db:studio"
   },
   "devDependencies": {
+    "bumpp": "^10.2.3",
     "eslint": "^10.3.0",
     "turbo": "^2",
     "vitest": "^4.1.5"
