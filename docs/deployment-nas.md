@@ -107,6 +107,7 @@ web
 - `DATABASE_DRIVER=postgres`
 - 通过 `DATABASE_URL` 连接公共 `shared-postgres`
 - 通过 `DATABASE_SCHEMA` 指定当前项目 schema
+- 通过 `IMAGE_TAG` 固定到明确发布版本，避免生产环境直接拉 `latest`
 - 通过 Traefik labels 挂域名
 - 不在项目 compose 内重复声明 Postgres 服务
 
@@ -153,10 +154,11 @@ data/
 
 ## Release Automation
 
-稳定开发后，可在约定分支（如 `release`）推送时通过 GitHub Actions 自动构建并推送镜像。
+稳定开发后，推荐通过 git tag（如 `v0.1.0`）触发 GitHub Actions 自动构建并推送镜像。
 
 约束：
 
 - GitHub Actions 只负责自动构建和推送镜像
+- `main` 负责 CI，版本 tag 负责 release image
 - 本地 `docker build` / `docker compose` 路径必须继续可用
-- registry、镜像名、分支规则和凭据来源需要在项目 README 或 workflow 注释中写清楚
+- registry、镜像名、tag 规则和凭据来源需要在项目 README 或 workflow 注释中写清楚

@@ -76,20 +76,25 @@ This is an optional containerized path. The default local development path is SQ
 Requires a running Traefik reverse proxy on an external `proxy` network and a shared PostgreSQL instance.
 
 ```bash
-# Start from `.env.postgres.example`, then configure shared PostgreSQL connection info
+# Start from `.env.postgres.example`, set IMAGE_TAG to a released version tag,
+# then configure shared PostgreSQL connection info
 docker compose -f compose.prod.yml up -d
 ```
+
+Use fixed release tags such as `v0.1.0` for NAS deployments. Avoid relying on `latest` in production.
 
 See [docs/deployment-nas.md](docs/deployment-nas.md) for full NAS deployment details.
 
 ## CI/CD
 
-Push to the `release` branch to trigger automatic image build and push via GitHub Actions.
+Push to `main` to run CI. Create and push a `v*` git tag to trigger automatic image build and push via GitHub Actions.
 
 The workflow reuses `Dockerfile.web` and pushes to `ghcr.io/<owner>/<repo>` using the current GitHub repository name.
 
-On `release` pushes, the workflow publishes:
+On version tag pushes, the workflow publishes:
 
+- the version tag
+- the major.minor tag
 - a commit SHA tag
 - `latest`
 
