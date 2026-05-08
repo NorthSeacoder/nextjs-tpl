@@ -47,3 +47,5 @@ packages/db/data/
 
 # Vercel
 .vercel
+
+*.local*
