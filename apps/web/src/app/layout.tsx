@@ -1,9 +1,15 @@
 import type { Metadata } from 'next';
+import { env } from '@nextjs-tpl/db/env';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Next.js Template',
+  metadataBase: new URL(env.appUrl),
+  title: {
+    default: 'Next.js Template',
+    template: '%s | Next.js Template',
+  },
   description: 'A self-hosted, agent-friendly Next.js full-stack template',
+  applicationName: 'Next.js Template',
 };
 
 export default function RootLayout({
@@ -13,7 +19,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-[var(--bg-canvas)] text-[var(--text-primary)] antialiased">{children}</body>
+      <body
+        className="bg-[var(--bg-canvas)] text-[var(--text-primary)] antialiased"
+        style={{ fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif' }}
+      >
+        {children}
+      </body>
     </html>
   );
 }

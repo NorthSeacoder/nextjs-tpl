@@ -1,20 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getTrimmedString, parseJsonBody } from '../../_lib/validation';
+import { signInWithPassword } from '@/lib/auth/session';
 
 export async function POST(request: NextRequest) {
-  const { email, password } = await request.json();
-
-  if (!email || !password) {
-    return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
+  const body = await parseJsonBody(request);
+  if (body instanceof NextResponse) {
+    return body;
   }
 
-  const { authenticateUser, createSession } = await import('@/lib/auth/session');
-  const user = await authenticateUser(email, password);
+  const result = await signInWithPassword(
+    getTrimmedString(body.email),
+    getTrimmedString(body.password),
+  );
 
-  if (!user) {
-    return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: result.status });
   }
-
-  await createSession(user.id);
 
   return NextResponse.json({ success: true });
 }

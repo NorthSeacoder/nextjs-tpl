@@ -1,4 +1,5 @@
 import { getSessionUser } from '@/lib/auth/session';
+import Link from 'next/link';
 
 export default async function SettingsPage() {
   const user = await getSessionUser();
@@ -15,9 +16,9 @@ export default async function SettingsPage() {
         <div className="rounded-lg border border-[var(--border-subtle)] bg-[var(--bg-panel)] p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
           <h2 className="font-medium text-[var(--text-primary)]">API Tokens</h2>
           <p className="mt-1 text-sm text-[var(--text-secondary)]">
-            <a href="/settings/tokens" className="text-[var(--text-primary)] underline decoration-[var(--border-strong)] underline-offset-2 transition-colors hover:text-[var(--text-primary)]">
+            <Link href="/settings/tokens" className="text-[var(--text-primary)] underline decoration-[var(--border-strong)] underline-offset-2 transition-colors hover:text-[var(--text-primary)]">
               Manage API tokens
-            </a>
+            </Link>
           </p>
         </div>
       </div>

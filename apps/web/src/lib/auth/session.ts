@@ -1,4 +1,5 @@
 import { randomBytes, createHash } from 'crypto';
+import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { db, schema } from '@nextjs-tpl/db';
 import { eq } from 'drizzle-orm';
@@ -64,7 +65,7 @@ export async function destroySession(userId: string) {
   cookieStore.delete(SESSION_COOKIE_NAME);
 }
 
-export async function getSessionUser() {
+export const getSessionUser = cache(async function getSessionUser() {
   const cookieStore = await cookies();
   const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
 
@@ -80,11 +81,11 @@ export async function getSessionUser() {
   if (session.expiresAt < new Date()) return null;
 
   return session.user;
-}
+});
 
 export async function authenticateUser(email: string, password: string) {
   const user = await db.query.users.findFirst({
-    where: eq(schema.users.email, email),
+    where: eq(schema.users.email, email.trim().toLowerCase()),
   });
 
   if (!user) return null;
@@ -95,4 +96,33 @@ export async function authenticateUser(email: string, password: string) {
   if (!valid) return null;
 
   return user;
+}
+
+export async function signInWithPassword(email: string, password: string) {
+  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedPassword = password.trim();
+
+  if (!normalizedEmail || !normalizedPassword) {
+    return {
+      ok: false as const,
+      error: 'Email and password are required',
+      status: 400,
+    };
+  }
+
+  const user = await authenticateUser(normalizedEmail, normalizedPassword);
+
+  if (!user) {
+    return {
+      ok: false as const,
+      error: 'Invalid credentials',
+      status: 401,
+    };
+  }
+
+  await createSession(user.id);
+
+  return {
+    ok: true as const,
+  };
 }

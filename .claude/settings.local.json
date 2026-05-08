@@ -21,7 +21,9 @@
       "Bash(mv /tmp/db-pkg.json packages/db/package.json)",
       "Bash(python3 *)",
       "mcp__exa__web_search_exa",
-      "mcp__exa__web_fetch_exa"
+      "mcp__exa__web_fetch_exa",
+      "Read(//private/tmp/-qidian-dl/**)",
+      "Bash(sqlite3 data/db/qidian.db \"SELECT idx, title, is_vip, content_scraped, LENGTH\\(content\\) FROM chapters ORDER BY idx LIMIT 30;\")"
     ]
   }
 }
