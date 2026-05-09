@@ -31,6 +31,12 @@ pnpm dev            # Start all packages in dev mode
 
 Visit http://localhost:3000. Log in with the admin credentials from `.env`.
 
+Before pushing, run:
+
+```bash
+pnpm check:ci
+```
+
 Default local mode:
 
 - `DATABASE_DRIVER=sqlite`
@@ -49,6 +55,7 @@ pnpm db:seed
 | Command | Description |
 |---------|-------------|
 | `pnpm dev` | Start dev servers |
+| `pnpm check:ci` | Run the same lint, typecheck, test, and build checks used by GitHub CI |
 | `pnpm build` | Production build |
 | `pnpm lint` | Lint all packages |
 | `pnpm typecheck` | Type-check all packages |
