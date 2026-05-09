@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { spawnSync } from 'node:child_process';
 import { Client } from 'pg';
-import { env, workspaceRoot } from '../src/env';
+import { defaultSqliteUrl, env, resolveSqliteDatabasePath, workspaceRoot } from '../src/env';
 
 type JournalEntry = {
   idx: number;
@@ -14,6 +14,10 @@ type JournalFile = {
 };
 
 function runSqliteMigrate() {
+  const databaseUrl = env.databaseUrl || defaultSqliteUrl();
+  const absolutePath = resolveSqliteDatabasePath(databaseUrl);
+  fs.mkdirSync(path.dirname(absolutePath), { recursive: true });
+
   const result = spawnSync(
     'drizzle-kit',
     ['migrate', '--config', path.join(process.cwd(), 'drizzle.sqlite.config.ts')],
